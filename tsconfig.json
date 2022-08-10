@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2016",
     "module": "ESNext",
     "moduleResolution": "node",
     "strict": false,
     "declaration": true,
     "noImplicitOverride": true,
-    "noUnusedLocals": true,
     "esModuleInterop": true,
     "useUnknownInCatchVariables": false,
     "resolveJsonModule": true

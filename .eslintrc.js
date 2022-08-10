@@ -17,6 +17,11 @@ module.exports = {
   rules: {
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
-    'comma-dangle': ['error', 'never']
+    'comma-dangle': ['error', 'never'],
+    'import/no-unresolved': 'off',
+    'import/extensions': 'off',
+    'dot-notation': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error']
   }
 }
