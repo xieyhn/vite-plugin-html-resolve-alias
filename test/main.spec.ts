@@ -1,7 +1,7 @@
 import {
   describe, it, expect, beforeEach, afterEach
 } from 'vitest'
-import { createServer, ViteDevServer } from 'vite'
+import { createServer, ViteDevServer, Plugin as VitePlugin } from 'vite'
 import path from 'path'
 import { createViteConfig, matchTag } from './helper'
 
@@ -16,7 +16,7 @@ describe('transform', () => {
   let handler: (result: string) => void
 
   beforeEach(async () => {
-    server = await createServer(createViteConfig(alias, {
+    const plguin: VitePlugin = {
       name: 'vite-plugin-html-resolve-alias-test',
       transformIndexHtml: {
         enforce: 'pre',
@@ -24,7 +24,10 @@ describe('transform', () => {
           if (handler) handler(html)
         }
       }
-    }))
+    }
+    const config = createViteConfig(alias)
+    config.plugins.push(plguin)
+    server = await createServer(config)
   })
 
   afterEach(() => {
