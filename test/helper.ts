@@ -1,15 +1,19 @@
-import { InlineConfig } from 'vite'
+import { InlineConfig, Plugin as VitePlugin } from 'vite'
 import posthtml, { Node as PosthtmlNode, Plugin as PosthtmlPlugin } from 'posthtml'
 import viteHtmlResolveAliasPlugin from '../src/index'
 
-export const createViteConfig = (alias: Record<string, string>): InlineConfig => ({
+export const createViteConfig = (
+  alias: Record<string, string>,
+  plugin: VitePlugin
+): InlineConfig => ({
   configFile: false,
   root: __dirname,
   resolve: {
     alias
   },
   plugins: [
-    viteHtmlResolveAliasPlugin()
+    viteHtmlResolveAliasPlugin(),
+    plugin
   ]
 })
 
