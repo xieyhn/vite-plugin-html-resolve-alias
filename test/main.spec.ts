@@ -71,7 +71,9 @@ describe('transform', () => {
     <svg>
       <image xlink:href="@foo/e.ext" href="@foo/f.ext"></image>
       <use xlink:href="@foo/g.ext" href="@foo/h.ext"></use>
-    </svg>`
+    </svg>
+    <link href="@foo/i.ext" />
+    <script src="@foo/j.ext" />`
 
     handler = (result) => {
       matchTag(result, 'img', (node) => expect(node.attrs['src']).toBe('foo/a.ext'))
@@ -90,6 +92,9 @@ describe('transform', () => {
         expect(node.attrs['xlink:href']).toBe('foo/g.ext')
         expect(node.attrs['href']).toBe('foo/h.ext')
       })
+
+      matchTag(result, 'link', (node) => expect(node.attrs['href']).toBe('foo/i.ext'))
+      matchTag(result, 'script', (node) => expect(node.attrs['src']).toBe('foo/j.ext'))
     }
 
     server.transformIndexHtml('/index.html', html)

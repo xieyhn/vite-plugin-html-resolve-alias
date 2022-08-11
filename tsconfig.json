@@ -4,7 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "strict": false,
-    "declaration": true,
+    "declaration": false,
     "noImplicitOverride": true,
     "esModuleInterop": true,
     "useUnknownInCatchVariables": false,
