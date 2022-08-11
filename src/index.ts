@@ -12,7 +12,9 @@ const defaultTags: Tags = {
   source: ['src'],
   img: ['src'],
   image: ['xlink:href', 'href'],
-  use: ['xlink:href', 'href']
+  use: ['xlink:href', 'href'],
+  link: ['href'],
+  script: ['src']
 }
 
 // rollup-alias matches
