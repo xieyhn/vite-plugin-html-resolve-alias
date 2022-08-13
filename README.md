@@ -2,17 +2,24 @@
 
 [中文](https://github.com/haiya6/vite-plugin-html-resolve-alias/blob/main/docs/zh-CN.md)
 
-Allows you to use vite-configured aliases in html content
-
 ## Install
 
-```shell
+```bash
 npm install vite-plugin-html-resolve-alias -D
 ```
 
-## How to use
+```bash
+yarn add vite-plugin-html-resolve-alias -D
+```
 
-vite.config.ts
+```bash
+pnpm install vite-plugin-html-resolve-alias -D
+```
+
+## Usage
+
+Add the plugin to your Vite config as follows:
+
 ```ts
 import path from 'path'
 import { defineConfig } from 'vite'
@@ -26,30 +33,23 @@ export default defineConfig({
     }
   },
   plugins: [
-    viteHtmlResolveAlias()
+    viteHtmlResolveAlias(/* Options */)
   ]
 })
 ```
 
-in your html file:
+Next, you can use aliases in HTML:
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="@/main.css">
+</head>
 <body>
-  <img src="@/images/a.png" />
-</body>
-</html>
-```
-
-equal to:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<body>
-  <!-- relative directory relative to the current html file -->
-  <img src="src/images/a.png" />
+  <img src="@/foo.png" />
+  <script src="@/main.js"></script>
 </body>
 </html>
 ```
@@ -58,15 +58,16 @@ equal to:
 
 ### tags
 
-Specify the tag and tag attribute name to be resolved
+Specify the tag and tag attribute name to be resolved.
 
 ```ts
 type Tags = Record<string, string[]>
 ```
 
 Default
+
 ```ts
-const defaultTags: Tags = {
+{
   video: ['src', 'poster'],
   source: ['src'],
   img: ['src'],
