@@ -1,16 +1,23 @@
 # vite-plugin-html-resolve-alias
 
-在 html 内容中使用 vite 配置的别名
-
 ## 安装
 
-```shell
+```bash
 npm install vite-plugin-html-resolve-alias -D
+```
+
+```bash
+yarn add vite-plugin-html-resolve-alias -D
+```
+
+```bash
+pnpm install vite-plugin-html-resolve-alias -D
 ```
 
 ## 使用
 
-vite.config.ts
+在 Vite 配置中添加插件：
+
 ```ts
 import path from 'path'
 import { defineConfig } from 'vite'
@@ -24,30 +31,23 @@ export default defineConfig({
     }
   },
   plugins: [
-    viteHtmlResolveAlias()
+    viteHtmlResolveAlias(/* Options */)
   ]
 })
 ```
 
-在你的 html 文件中：
+接下来，你可以在 HTML 中使用别名：
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="@/main.css">
+</head>
 <body>
-  <img src="@/images/a.png" />
-</body>
-</html>
-```
-
-等效于：
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<body>
-  <!-- 相对于当前 html 文件的相对目录 -->
-  <img src="src/images/a.png" />
+  <img src="@/foo.png" />
+  <script src="@/main.js"></script>
 </body>
 </html>
 ```
@@ -56,15 +56,16 @@ export default defineConfig({
 
 ### tags
 
-指定要解析的标签和标签属性名
+指定要解析的标签和标签属性名称。
 
 ```ts
 type Tags = Record<string, string[]>
 ```
 
-默认值
+Default
+
 ```ts
-const defaultTags: Tags = {
+{
   video: ['src', 'poster'],
   source: ['src'],
   img: ['src'],
