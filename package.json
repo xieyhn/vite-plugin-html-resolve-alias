@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-html-resolve-alias",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A vite plugin that can use aliases in html content.",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -38,13 +38,13 @@
     "rollup-plugin-typescript2": "^0.32.1",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.5",
+    "vite": "^4.0.0",
     "vitest": "^0.21.1"
   },
   "dependencies": {
     "posthtml": "^0.16.6"
   },
   "peerDependencies": {
-    "vite": "^3.0.0"
+    "vite": "^3.0.0 || ^4.0.0"
   }
 }
