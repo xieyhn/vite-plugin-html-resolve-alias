@@ -19,7 +19,7 @@ pnpm install vite-plugin-html-resolve-alias -D
 在 Vite 配置中添加插件：
 
 ```ts
-import path from 'path'
+import path from 'node:path'
 import { defineConfig } from 'vite'
 import viteHtmlResolveAlias from 'vite-plugin-html-resolve-alias'
 
@@ -65,7 +65,7 @@ type Tags = Record<string, string[]>
 Default
 
 ```ts
-{
+const defaultTags: Tags = {
   video: ['src', 'poster'],
   source: ['src'],
   img: ['src'],
