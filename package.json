@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-html-resolve-alias",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A vite plugin that can use aliases in html content.",
   "author": "xieyhn",
   "license": "MIT",
@@ -15,8 +15,12 @@
   "keywords": [
     "vite-plugin"
   ],
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
