@@ -1,20 +1,10 @@
 {
   "name": "vite-plugin-html-resolve-alias",
-  "version": "1.0.3",
+  "type": "module",
+  "version": "2.0.0",
   "description": "A vite plugin that can use aliases in html content.",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "lint": "eslint . --ext .ts,.js --fix",
-    "build": "rimraf dist && rollup -c rollup.config.js",
-    "test": "vitest run",
-    "prepare": "husky install"
-  },
-  "author": "xieyuhang",
-  "keywords": [
-    "vite-plugin"
-  ],
+  "author": "xieyhn",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/haiya6/vite-plugin-html-resolve-alias.git"
@@ -22,29 +12,41 @@
   "bugs": {
     "url": "https://github.com/haiya6/vite-plugin-html-resolve-alias/issues"
   },
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^18.6.5",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
-    "eslint": "^7.32.0 || ^8.2.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.77.2",
-    "rollup-plugin-dts": "^4.2.2",
-    "rollup-plugin-typescript2": "^0.32.1",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.4",
-    "vite": "^4.0.0",
-    "vitest": "^0.21.1"
+  "keywords": [
+    "vite-plugin"
+  ],
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "test": "vitest run",
+    "prepare": "husky install"
+  },
+  "peerDependencies": {
+    "vite": "^5.0.0"
   },
   "dependencies": {
     "posthtml": "^0.16.6"
   },
-  "peerDependencies": {
-    "vite": "^3.0.0 || ^4.0.0"
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.23.2",
+    "@types/node": "^18.19.41",
+    "eslint": "^9.7.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^4.19.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.3.4",
+    "vitest": "^2.0.4"
+  },
+  "lint-staged": {
+    "*.{ts,js}": "eslint --ext .ts,.js --fix"
   }
 }

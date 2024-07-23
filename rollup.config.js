@@ -1,34 +1,33 @@
-import path from 'path'
+import fs from 'node:fs'
 import { defineConfig } from 'rollup'
 import typescript from 'rollup-plugin-typescript2'
 import dts from 'rollup-plugin-dts'
 
+const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+
 export default defineConfig([
   {
-    input: path.resolve(__dirname, 'src/index.ts'),
-    output: [
-      {
-        file: 'dist/index.mjs',
-        format: 'esm'
-      },
-      {
-        file: 'dist/index.cjs',
-        format: 'cjs',
-        exports: 'default'
-      }
+    input: 'src/index.ts',
+    external: [
+      /node:.+/,
+      ...Object.keys(pkg.dependencies),
+      ...Object.keys(pkg.peerDependencies),
     ],
-    plugins: [
-      typescript()
-    ]
-  },
-  {
-    input: path.resolve(__dirname, 'src/index.ts'),
     output: {
-      file: 'dist/index.d.ts',
-      format: 'esm'
+      format: 'esm',
+      dir: 'dist',
     },
     plugins: [
-      dts()
-    ]
-  }
+      typescript(),
+    ],
+  },
+  {
+    input: 'src/index.ts',
+    output: {
+      dir: 'dist',
+    },
+    plugins: [
+      dts(),
+    ],
+  },
 ])

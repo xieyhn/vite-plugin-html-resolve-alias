@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transform > default tags 1`] = `
+"<script type="module" src="/@vite/client"></script>
+<img src="foo/a.ext">
+    <video src="foo/b.ext" poster="foo/c.ext">
+      <source src="foo/d.ext">
+    </video>
+    <svg>
+      <image xlink:href="foo/e.ext" href="foo/f.ext"></image>
+      <use xlink:href="foo/g.ext" href="foo/h.ext"></use>
+    </svg>
+    <link href="foo/i.ext">
+    <script src="foo/j.ext"></script>"
+`;

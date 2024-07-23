@@ -1,10 +1,13 @@
-import path from 'path'
-import posthtml, { Plugin as PosthtmlPlugin } from 'posthtml'
-import { Plugin as VitePlugin, ResolvedConfig, normalizePath } from 'vite'
+import path from 'node:path'
+import type { Plugin as PosthtmlPlugin } from 'posthtml'
+import posthtml from 'posthtml'
+import type { ResolvedConfig, Plugin as VitePlugin } from 'vite'
+import { normalizePath } from 'vite'
 
 type Tags = Record<string, string[]>
+
 export interface Options {
-  tags?: Record<string, string[]>
+  tags?: Tags
 }
 
 const defaultTags: Tags = {
@@ -14,7 +17,7 @@ const defaultTags: Tags = {
   image: ['xlink:href', 'href'],
   use: ['xlink:href', 'href'],
   link: ['href'],
-  script: ['src']
+  script: ['src'],
 }
 
 // rollup-alias matches
@@ -31,7 +34,7 @@ function matches(pattern: string | RegExp, importee: string) {
   return importee.startsWith(`${pattern}/`)
 }
 
-const viteHtmlResolveAliasPlugin = (options?: Options): VitePlugin => {
+function viteHtmlResolveAliasPlugin(options?: Options): VitePlugin {
   const tags = options?.tags ?? defaultTags
   let config: ResolvedConfig
 
@@ -43,49 +46,49 @@ const viteHtmlResolveAliasPlugin = (options?: Options): VitePlugin => {
     },
 
     transformIndexHtml: {
-      enforce: 'pre',
+      order: 'pre',
 
-      async transform(html, { filename }) {
+      async handler(html, { filename }) {
         const { resolve: { alias } } = config
-        let hasTransformed = false
 
         const posthtmlTransformPlugin: PosthtmlPlugin<void> = (tree) => {
-          tree.match(Object.keys(tags).map((tag) => ({ tag })), (node) => {
-            Object.entries(node.attrs || {}).forEach(([key, value = '']) => {
-              if (tags[node.tag].includes(key)) {
-                const matchedEntry = alias.find((entry) => matches(entry.find, value))
-                if (!matchedEntry) {
-                  return
-                }
-                // eslint-disable-next-line no-param-reassign
-                node.attrs[key] = normalizePath(
-                  path.relative(
-                    path.dirname(filename),
-                    value.replace(matchedEntry.find, matchedEntry.replacement)
+          tree.match(
+            Object.keys(tags).map(tag => ({ tag })),
+            (node) => {
+              Object.entries(node.attrs || {}).forEach(([key, value = '']) => {
+                if (tags[node.tag].includes(key)) {
+                  const matched = alias.find(entry => matches(entry.find, value))
+
+                  if (!matched) {
+                    return
+                  }
+
+                  node.attrs[key] = normalizePath(
+                    path.relative(
+                      path.dirname(filename),
+                      value.replace(matched.find, matched.replacement),
+                    ),
                   )
-                )
-                hasTransformed = true
-              }
-            })
-            return node
-          })
+                }
+              })
+              return node
+            },
+          )
         }
 
         try {
           const result = await posthtml([posthtmlTransformPlugin]).process(html)
-          if (hasTransformed) {
-            return result.html
-          }
-        } catch (e) {
-          // eslint-disable-next-line no-console
+          return result.html
+        }
+        catch (e) {
           console.error(
-            `Transform Html error: ${e.message}`
+            `Transform Html error: ${e.message}`,
           )
         }
 
         return null
-      }
-    }
+      },
+    },
   }
 }
 

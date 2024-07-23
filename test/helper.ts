@@ -1,31 +1,28 @@
-import { InlineConfig } from 'vite'
-import posthtml, { Node as PosthtmlNode, Plugin as PosthtmlPlugin } from 'posthtml'
-import viteHtmlResolveAliasPlugin, { Options } from '../src/index'
+import type { InlineConfig } from 'vite'
+import type { Node as PosthtmlNode, Plugin as PosthtmlPlugin } from 'posthtml'
+import posthtml from 'posthtml'
+import type { Options } from '../src/index'
+import viteHtmlResolveAliasPlugin from '../src/index'
 
-export const createViteConfig = (
-  alias: Record<string, string>,
-  options?: Options
-): InlineConfig => ({
-  configFile: false,
-  root: __dirname,
-  resolve: {
-    alias
-  },
-  plugins: [
-    viteHtmlResolveAliasPlugin(options)
-  ]
-})
+export function createViteConfig(alias: Record<string, string>, options?: Options): InlineConfig {
+  return {
+    configFile: false,
+    root: __dirname,
+    resolve: {
+      alias,
+    },
+    plugins: [
+      viteHtmlResolveAliasPlugin(options),
+    ],
+  }
+}
 
-export const matchTag = (
-  html: string,
-  tagName: string,
-  callback: (node?: PosthtmlNode) => void
-) => {
-  const plguin: PosthtmlPlugin<any> = (tree) => {
+export function matchTag(html: string, tagName: string, callback: (node?: PosthtmlNode) => void) {
+  const plugin: PosthtmlPlugin<any> = (tree) => {
     tree.match({ tag: tagName }, (node) => {
       callback(node)
       return node
     })
   }
-  posthtml([plguin]).process(html)
+  posthtml([plugin]).process(html)
 }

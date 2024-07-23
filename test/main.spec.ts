@@ -1,69 +1,61 @@
+import path from 'node:path'
 import {
-  describe, it, expect, beforeEach, afterEach
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  it,
 } from 'vitest'
-import { createServer, ViteDevServer, Plugin as VitePlugin } from 'vite'
-import path from 'path'
+import type { ViteDevServer } from 'vite'
+import { createServer } from 'vite'
+import type { NodeAttributes } from 'posthtml'
 import { createViteConfig, matchTag } from './helper'
 
 const alias: Record<string, string> = {
   '@': path.resolve(__dirname),
   '@foo': path.resolve(__dirname, 'foo'),
-  '@nested': path.resolve(__dirname, 'foo/bar')
+  '@nested': path.resolve(__dirname, 'foo/bar'),
 }
 
 describe('transform', () => {
   let server: ViteDevServer
-  let handler: (result: string) => void
 
-  beforeEach(async () => {
-    const plguin: VitePlugin = {
-      name: 'vite-plugin-html-resolve-alias-test',
-      transformIndexHtml: {
-        enforce: 'pre',
-        async transform(html) {
-          if (handler) handler(html)
-        }
-      }
-    }
-    const config = createViteConfig(alias)
-    config.plugins.push(plguin)
-    server = await createServer(config)
+  beforeAll(async () => {
+    server = await createServer(createViteConfig(alias))
   })
 
-  afterEach(() => {
-    if (server) server.close()
-    handler = undefined
+  afterAll(async () => {
+    if (server)
+      await server.close()
   })
 
-  it('transform html', () => {
+  it('transform html', async () => {
     const html = '<img id="img1" src="@/a.png" /><img id="img2" src="@nested/a.png" />'
+    const result = await server.transformIndexHtml('/index.html', html)
 
-    handler = (result) => {
-      matchTag(result, 'img', (node) => {
-        const { id, src } = node.attrs as Record<string, string>
-        if (id === 'img1') expect(src).toBe('a.png')
-        if (id === 'img2') expect(src).toBe('foo/bar/a.png')
-      })
-    }
-
-    server.transformIndexHtml('/index.html', html)
+    matchTag(result, 'img', (node) => {
+      const { id, src } = node.attrs as NodeAttributes
+      if (id === 'img1')
+        expect(src).toBe('a.png')
+      if (id === 'img2')
+        expect(src).toBe('foo/bar/a.png')
+    })
   })
 
-  it('transform nested html', () => {
+  it('transform nested html', async () => {
     const html = '<img id="img1" src="@/a.png" /><img id="img2" src="@nested/a.png" />'
+    const result = await server.transformIndexHtml('/foo/index.html', html)
 
-    handler = (result) => {
-      matchTag(result, 'img', (node) => {
-        const { id, src } = node.attrs as Record<string, string>
-        if (id === 'img1') expect(src).toBe('../a.png')
-        if (id === 'img2') expect(src).toBe('bar/a.png')
-      })
-    }
-
-    server.transformIndexHtml('/foo/index.html', html)
+    matchTag(result, 'img', (node) => {
+      const { id, src } = node.attrs as NodeAttributes
+      if (id === 'img1')
+        expect(src).toBe('../a.png')
+      if (id === 'img2')
+        expect(src).toBe('bar/a.png')
+    })
   })
 
-  it('defalut tags', () => {
+  it('default tags', async () => {
     const html = `<img src="@foo/a.ext" />
     <video src="@foo/b.ext" poster="@foo/c.ext">
       <source src="@foo/d.ext">
@@ -74,29 +66,8 @@ describe('transform', () => {
     </svg>
     <link href="@foo/i.ext" />
     <script src="@foo/j.ext" />`
+    const result = await server.transformIndexHtml('/index.html', html)
 
-    handler = (result) => {
-      matchTag(result, 'img', (node) => expect(node.attrs['src']).toBe('foo/a.ext'))
-
-      matchTag(result, 'video', (node) => {
-        expect(node.attrs['src']).toBe('foo/b.ext')
-        expect(node.attrs['poster']).toBe('foo/c.ext')
-      })
-
-      matchTag(result, 'image', (node) => {
-        expect(node.attrs['xlink:href']).toBe('foo/e.ext')
-        expect(node.attrs['href']).toBe('foo/f.ext')
-      })
-
-      matchTag(result, 'use', (node) => {
-        expect(node.attrs['xlink:href']).toBe('foo/g.ext')
-        expect(node.attrs['href']).toBe('foo/h.ext')
-      })
-
-      matchTag(result, 'link', (node) => expect(node.attrs['href']).toBe('foo/i.ext'))
-      matchTag(result, 'script', (node) => expect(node.attrs['src']).toBe('foo/j.ext'))
-    }
-
-    server.transformIndexHtml('/index.html', html)
+    expect(result).matchSnapshot()
   })
 })

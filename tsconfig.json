@@ -3,11 +3,11 @@
     "target": "ES2016",
     "module": "ESNext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "strict": false,
-    "declaration": false,
     "noImplicitOverride": true,
-    "esModuleInterop": true,
     "useUnknownInCatchVariables": false,
-    "resolveJsonModule": true
+    "declaration": false,
+    "esModuleInterop": true
   }
 }
