@@ -1,5 +1,6 @@
 {
   "name": "vite-plugin-html-resolve-alias",
+  "main": "dist/index.js",
   "type": "module",
   "version": "2.0.1",
   "description": "A vite plugin that can use aliases in html content.",
