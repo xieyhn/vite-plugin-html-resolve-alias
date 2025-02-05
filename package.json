@@ -26,9 +26,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "rimraf dist && rollup -c rollup.config.js",
+    "build": "npx rimraf dist && npx rollup -c rollup.config.js",
     "test": "vitest run",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "npm run build"
   },
   "peerDependencies": {
     "vite": "^5.0.0"
